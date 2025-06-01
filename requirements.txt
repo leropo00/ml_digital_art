@@ -1,2 +1,4 @@
 ipykernel
 python-dotenv
+seaborn
+matplotlib
