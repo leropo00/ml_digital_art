@@ -1,24 +1,12 @@
-# Data Project Template
+# Digital Art AI agents and ML training experiments
 
-<a target="_blank" href="https://datalumina.com/">
-    <img src="https://img.shields.io/badge/Datalumina-Project%20Template-2856f7" alt="Datalumina Project" />
-</a>
 
-## Cookiecutter Data Science
-This project template is a simplified version of the [Cookiecutter Data Science](https://cookiecutter-data-science.drivendata.org) template, created to suit the needs of Datalumina and made available as a GitHub template.
+An experiments projects, with AI agents and ML training notebooks,
+for the domain of digital art creation.
+This is still project in the beginning, so many changes will likely happen.
 
-## Adjusting .gitignore
+## Project setup
 
-Ensure you adjust the `.gitignore` file according to your project needs. For example, since this is a template, the `/data/` folder is commented out and data will not be exlucded from source control:
-
-```plaintext
-# exclude data from source control by default
-# /data/
-```
-
-Typically, you want to exclude this folder if it contains either sensitive data that you do not want to add to version control or large files.
-
-## Duplicating the .env File
 To set up your environment variables, you need to duplicate the `.env.example` file and rename it to `.env`. You can do this manually or using the following terminal command:
 
 ```bash
@@ -28,8 +16,23 @@ copy .env.example .env # Windows Command Prompt
 
 This command creates a copy of `.env.example` and names it `.env`, allowing you to configure your environment variables specific to your setup.
 
+Currenlty the following environment variables are needed:
+
+
+
 
 ## Project Organization
+
+The project structure was created from this template:  https://github.com/datalumina/datalumina-project-template.
+Most of the folder are currently empty, the structure of the project may change.
+
+
+Currently the following folders are of interest:
+ - notebooks, contains some notebooks, . I personally created notebooks at google collab.
+
+
+
+This is the original datalumina project structure
 
 ```
 ├── LICENSE            <- Open-source license if one is chosen
