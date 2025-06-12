@@ -18,21 +18,46 @@ This command creates a copy of `.env.example` and names it `.env`, allowing you 
 
 Currenlty the following environment variables are needed:
 
+```
+OPENAI_API_KEY=key provided by openai
+```
 
 
+It is recommended to run the project inside a python virtual environment.
+The uv package manager is used, instead of more common pip.
 
 
+## Project commands
+
+Inside the file:   `pyproject.toml`, are multiple defined commands
+
+When adding a new command to pyproject.toml
+use `uv pip install -e .` 
+so tha command will be visible
 
 ## Project Organization
 
 The project structure was created from this template:  https://github.com/datalumina/datalumina-project-template.
 Most of the folder are currently empty, the structure of the project may change.
 
-
 Currently the following folders are of interest:
- - notebooks, contains some notebooks, . I personally created notebooks at google collab.
 
+```
+├──  database,  contains the files, that are used for creating data models, by sqlc.
+├──  notebooks, contains some Jupyter Notebookes. I personally created notebooks at google collab.
+├──  project, contains all the files needed by project that are runnable.
+    │
+    ├──  app             <- Contains the code by the fastai server
+    │
+    ├──  src             <- Contains the implementation of services, that perform actions.
+	│
+    ├──  test            <- Contains the code samples, that can always be run via commandline
+    │
+├── requirements.txt   <- The requirements file for reproducing the environment,
+							generated with `pip freeze > requirements.txt`
+```
 
+The project structure was created from this template:  https://github.com/datalumina/datalumina-project-template.
 
 This is the original datalumina project structure
 
