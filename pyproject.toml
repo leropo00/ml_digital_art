@@ -1,0 +1,19 @@
+[project]
+name = "digital-art-ai-agents-ml"
+version = "1.0.0"
+dynamic = ["dependencies"]
+
+[project.scripts]
+server_dev = "project.app.runner:main"
+sample_usage = "project.test.sample_usages:main"
+
+[tool.setuptools.packages.find]
+## since multiple folders can be seen as root project folder, this is set to avoid the error
+## error: Multiple top-level packages discovered in a flat-layout
+where = ["."]  # list of folders that contain the packages (["."] by default)
+include = ["project"]  # package names should match these glob patterns (["*"] by default)
+exclude = []  # exclude packages matching these glob patterns (empty by default)
+namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
