@@ -6,6 +6,7 @@ show the labels nearby
 import matplotlib as plt
 import numpy as np
 import itertools
+import types
 
 
 def format_lrs(lrs) -> None:
@@ -29,13 +30,14 @@ def format_lrs(lrs) -> None:
 
 def plot_confusion_matrix_vocab(
     self,
+    vocab_sorted: list,
     normalize: bool = False,  # Whether to normalize occurrences
     title: str = "Confusion matrix",  # Title of plot
     cmap: str = "Blues",  # Colormap from matplotlib
     norm_dec: int = 2,  # Decimal places for normalized occurrences
     plot_txt: bool = True,  # Display occurrence in matrix
     **kwargs,
-) -> None:
+):
     "Plot the confusion matrix, with `title` and using `cmap`."
     # This function is mainly copied from the sklearn docs
     cm = self.confusion_matrix()
@@ -44,18 +46,20 @@ def plot_confusion_matrix_vocab(
     fig = plt.figure(**kwargs)
     plt.imshow(cm, interpolation="nearest", cmap=cmap)
     plt.title(title)
-    tick_marks = np.arange(len(self.vocab))
-    plt.xticks(tick_marks, self.vocab, rotation=90)
-    plt.yticks(tick_marks, self.vocab, rotation=0)
+    tick_marks = np.arange(len(vocab_sorted))
+    plt.xticks(tick_marks, vocab_sorted, rotation=90)
+    plt.yticks(tick_marks, vocab_sorted, rotation=0)
 
     if plot_txt:
         thresh = cm.max() / 2.0
         for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+            mapping_i = vocab_sorted.index(self.vocab[i])
+            mapping_j = vocab_sorted.index(self.vocab[j])
+
             coeff = f"{cm[i, j]:.{norm_dec}f}" if normalize else f"{cm[i, j]}"
-            # change the location in here based on mapping
             plt.text(
-                j,
-                i,
+                mapping_j,
+                mapping_i,
                 coeff,
                 horizontalalignment="center",
                 verticalalignment="center",
@@ -69,3 +73,11 @@ def plot_confusion_matrix_vocab(
     plt.ylabel("Actual")
     plt.xlabel("Predicted")
     plt.grid(False)
+
+    return ax
+
+
+def add_methods_to_interpetation(interp):
+    interp.plot_confusion_matrix_vocab = types.MethodType(
+        plot_confusion_matrix_vocab, interp
+    )

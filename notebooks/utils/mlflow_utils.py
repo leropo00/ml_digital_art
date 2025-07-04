@@ -28,6 +28,15 @@ def log_mlflow_params(mlfclient, run, params):
         mlfclient.log_param(run_id=run.info.run_id, key=k, value=v)
 
 
+def get_last_run_id(mlfclient, active_experiment_id):
+    runs = mlfclient.search_runs(
+        experiment_ids=[active_experiment_id],
+        order_by=["start_time DESC"],
+        max_results=1,
+    )
+    return runs[0] if runs else None
+
+
 def save_fastai_model_as_artifact(
     mlfclient, run_id, learner, exported_model_filename, artifact_path="fastai_model"
 ) -> str:
