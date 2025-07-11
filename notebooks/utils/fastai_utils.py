@@ -3,7 +3,7 @@ Display learning rates, from learning rate finder,
 show the labels nearby
 """
 
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import numpy as np
 import itertools
 import types
