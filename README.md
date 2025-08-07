@@ -24,6 +24,25 @@ OPENAI_API_KEY=key provided by openai
 
 
 It is recommended to run the project inside a python virtual environment.
+One of the ways to create virtual environment is the following:
+
+```
+# be in the project root folder
+python -m venv ./.venv
+
+# how to activate the environment
+. .venv/bin/activate
+
+# when iniside virtual environment, you leave with command
+deactivate
+
+# install the dependencies, present in uv.lock
+uv sync
+
+# 
+uv pip install -e .
+```
+
 The uv package manager is used, instead of more common pip.
 
 
@@ -44,7 +63,8 @@ Currently the following folders are of interest:
 
 ```
 ├──  database,  contains the files, that are used for creating data models, by sqlc.
-├──  notebooks, contains some Jupyter Notebookes. I personally created notebooks at google collab.
+├──  notebooks, contains some Jupyter Notebookes. I personally created notebooks at google collab. 
+├	 Currently some notebooks fail in github viewer, but they work if you download them and view them separately.
 ├──  project, contains all the files needed by project that are runnable.
     │
     ├──  app             <- Contains the code by the fastai server
