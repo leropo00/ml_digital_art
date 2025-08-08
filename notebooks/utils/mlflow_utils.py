@@ -3,10 +3,10 @@ from fastai.callback.core import Callback
 from google.colab import userdata
 import mlflow
 from mlflow import MlflowClient
-from pyngrok import ngrok
 import os
+import re
+from pyngrok import ngrok
 from typing import List
-
 
 def create_mlflow_client(local_registry):
     mlfclient = mlflow.tracking.MlflowClient(tracking_uri=local_registry)
@@ -53,13 +53,45 @@ def save_fastai_model_as_artifact(
 
     # clear the exported fastai model
     os.remove(exported_model_filename)
-
     return artifact_uri
 
 
-def fastai_model_from_artifact(artifact_uri):
-    local_download_path = mlflow.artifacts.download_artifacts(artifact_uri=artifact_uri)
-    return load_learner(local_download_path)
+def load_fastai_learner_from_run(mlfclient, run_id: str, model_saved_name: str, dls = None):
+    local_path = mlfclient.download_artifacts(run_id, "fastai_model/" + model_saved_name)
+    learner = load_learner(local_path)
+    if dls is not None:
+        learner.dls = dls
+    return learner
+
+
+def find_run_id_by_code(mlfclient, active_experiment_id: str, run_code: str) -> str|None:
+    regex = r"^\d+_?$"
+    if not re.match(regex, run_code):
+        print('error not a valid run code', run_code)
+        return None
+    run_code_search = run_code if run_code.endswith('_') else run_code + '_'
+
+    results = mlfclient.search_runs(experiment_ids=[active_experiment_id], filter_string=f"attributes.run_name LIKE '{run_code_search}%'")
+    if len(results) == 0:
+        print(f"error, run with name starting with {run_code_search} not found")
+        return None
+    if len(results) > 1:
+        print(f"warning, multiple runs with name starting with {run_code_search}, returning None, found ids were:")
+        run_ids = list(map(lambda x: x.info.run_id, results.to_list()))
+        return None
+    return results[0].info.run_id
+
+
+def get_run_id_from_name(mlfclient, active_experiment_id: str, run_name: str) -> str|None:
+    results = mlfclient.search_runs(experiment_ids=[active_experiment_id], filter_string=f"attributes.run_name = '{run_name}'")
+    if len(results) == 0:
+        print(f"error, run with name {run_name} not found")
+        return None
+    if len(results) > 1:
+        print('warning, multiple runs with name, returning None, found ids were ')
+        run_ids = list(map(lambda x: x.info.run_id, results.to_list()))
+        return None
+    return results[0].info.run_id
 
 
 def start_mlflow_server_in_collab(local_registry, mlflow_port) -> None:
