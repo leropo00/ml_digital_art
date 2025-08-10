@@ -16,6 +16,7 @@ dependencies = [
     "decorator==5.2.1",
     "distro==1.9.0",
     "executing==2.2.0",
+    "fastapi>=0.116.1",
     "fonttools==4.58.2",
     "h11==0.16.0",
     "httpcore==1.0.9",
@@ -63,6 +64,7 @@ dependencies = [
     "typing-extensions==4.14.0",
     "typing-inspection==0.4.1",
     "tzdata==2025.2",
+    "uvicorn>=0.35.0",
     "wcwidth==0.2.13",
 ]
 
