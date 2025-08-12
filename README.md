@@ -60,7 +60,7 @@ Use `uv pip install -e .` so that command will be visible.
 
 Currently, two commands are present; you can run them in any folder inside a virtual environment. 
 
-- `server_dev`: this starts the server in development mode, with hot reloading. Go to the URL , here the project swagger UI is present with all the endpoints.
+- `server_dev`: this starts the server in development mode, with hot reloading. Go to the URL http://127.0.0.1:8000/docs , here the project swagger UI is present with all the endpoints.
 
 - `show_examples`: when more AI agents features will be implemented, multiple examples of scenarios with filled conversations will be available here.
 
@@ -68,6 +68,7 @@ Currently, two commands are present; you can run them in any folder inside a vir
 ## Project Organization
 
 The project structure was created from this template: 
+https://github.com/datalumina/datalumina-project-template.
 Some of the folders are currently empty and the structure of the project may change.
 
 Currently, the following folders are of interest:
