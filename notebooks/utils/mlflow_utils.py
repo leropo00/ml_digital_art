@@ -89,7 +89,7 @@ def find_run_id_by_code(
         print(
             f"warning, multiple runs with name starting with {run_code_search}, returning None, found ids were:"
         )
-        run_ids = list(map(lambda x: x.info.run_id, results.to_list()))
+        print(list(map(lambda x: x.info.run_id, results.to_list())))
         return None
     return results[0].info.run_id
 
@@ -106,7 +106,7 @@ def get_run_id_from_name(
         return None
     if len(results) > 1:
         print("warning, multiple runs with name, returning None, found ids were ")
-        run_ids = list(map(lambda x: x.info.run_id, results.to_list()))
+        print(list(map(lambda x: x.info.run_id, results.to_list())))
         return None
     return results[0].info.run_id
 
