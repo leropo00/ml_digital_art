@@ -1,13 +1,24 @@
 import itertools
+import os
 import pickle
 import types
+from typing import List
 
 import matplotlib.pyplot as plt
+from mlflow import MlflowClient  # type: ignore
 import numpy as np
 
+from fastai.callback.core import Callback  # type: ignore
+from fastai.learner import load_learner  # type: ignore
 from fastai.interpret import ClassificationInterpretation  # type: ignore
 
-__all__ = ["format_lrs", "store_fastai_classification_recordings"]
+__all__ = [
+    "format_lrs",
+    "store_fastai_classification_recordings",
+    "save_fastai_model_as_artifact",
+    "load_fastai_learner_from_run",
+    "MLFlowTracking",
+]
 
 """
 Display learning rates, from learning rate finder,
@@ -40,6 +51,69 @@ def store_fastai_classification_recordings(learn, mlfclient, run, vocabulary=Non
     interp = ClassificationInterpretation.from_learner(learn)
     _store_fastai_interpretation(interp, mlfclient, run, vocabulary)
     return interp
+
+
+"""
+Save fastai model as mlflow artifact.
+"""
+
+
+def save_fastai_model_as_artifact(
+    mlfclient, run_id, learner, exported_model_filename
+) -> str:
+    ### sample exported_model_filename = 'fastai_resnet18_train_only_frozen.pkl'
+
+    artifact_path = "fastai_model"
+    learner.export(exported_model_filename)
+    mlfclient.log_artifact(
+        run_id,
+        local_path=exported_model_filename,
+        artifact_path=artifact_path,
+    )
+    artifact_uri = f"runs:/{run_id}/{artifact_path}/{exported_model_filename}"
+
+    print("artifact_uri learner saved as pickle file for interference")
+    print(artifact_uri)
+
+    # clear the exported fastai model
+    os.remove(exported_model_filename)
+    return artifact_uri
+
+
+"""
+Load fastai learner from run.
+"""
+
+
+def load_fastai_learner_from_run(
+    mlfclient, run_id: str, model_saved_name: str, dls=None
+):
+    local_path = mlfclient.download_artifacts(
+        run_id, "fastai_model/" + model_saved_name
+    )
+    learner = load_learner(local_path)
+    if dls is not None:
+        learner.dls = dls
+    return learner
+
+
+class MLFlowTracking(Callback):
+    "A `LearnerCallback` that tracks the loss and other metrics into MLFlow"
+
+    def __init__(self, metric_names: List[str], client: MlflowClient, run_id: str):
+        self.client = client
+        self.run_id = run_id
+        self.metric_names = metric_names
+
+    def after_epoch(self):
+        "Compare the last value to the best up to now"
+        for metric_name in self.metric_names:
+            m_idx = list(self.recorder.metric_names[1:]).index(metric_name)
+            if len(self.recorder.values) > 0:
+                val = self.recorder.values[-1][m_idx]
+                self.client.log_metric(
+                    self.run_id, metric_name, float(val), step=self.learn.epoch
+                )
 
 
 """

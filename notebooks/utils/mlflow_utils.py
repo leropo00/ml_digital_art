@@ -1,12 +1,15 @@
-from fastai.learner import load_learner
-from fastai.callback.core import Callback
-from google.colab import userdata
-import mlflow
-from mlflow import MlflowClient
+from google.colab import userdata  # type: ignore
+import mlflow  # type: ignore
+from mlflow import MlflowClient  # type: ignore
 import os
 import re
-from pyngrok import ngrok
+from pyngrok import ngrok  # type: ignore
 from typing import List
+
+"""
+Utils for specific frameworks like fastai,
+should be in other files
+"""
 
 
 def create_mlflow_client(local_registry):
@@ -36,37 +39,6 @@ def get_last_run_id(mlfclient, active_experiment_id):
         max_results=1,
     )
     return runs[0] if runs else None
-
-
-def save_fastai_model_as_artifact(
-    mlfclient, run_id, learner, exported_model_filename, artifact_path="fastai_model"
-) -> str:
-    learner.export(exported_model_filename)
-    mlfclient.log_artifact(
-        run_id,
-        local_path=exported_model_filename,
-        artifact_path=artifact_path,
-    )
-    artifact_uri = f"runs:/{run_id}/{artifact_path}/{exported_model_filename}"
-
-    print("artifact_uri saved as model")
-    print(artifact_uri)
-
-    # clear the exported fastai model
-    os.remove(exported_model_filename)
-    return artifact_uri
-
-
-def load_fastai_learner_from_run(
-    mlfclient, run_id: str, model_saved_name: str, dls=None
-):
-    local_path = mlfclient.download_artifacts(
-        run_id, "fastai_model/" + model_saved_name
-    )
-    learner = load_learner(local_path)
-    if dls is not None:
-        learner.dls = dls
-    return learner
 
 
 def find_run_id_by_code(
@@ -113,7 +85,7 @@ def get_run_id_from_name(
 
 def start_mlflow_server_in_collab(local_registry, mlflow_port) -> None:
     # get_ipython is part of IPython.core.interactiveshell
-    get_ipython().system_raw(  # noqa: F821
+    get_ipython().system_raw(  # noqa: F821 # pyright: ignore[reportUndefinedVariable]
         f"mlflow ui --backend-store-uri {local_registry}  --port {mlflow_port} &"
     )  # run tracking UI in the background
 
@@ -133,22 +105,3 @@ def ngrok_access_to_mlflow_in_collab(mlflow_port) -> str:
     public_url = ngrok.connect(mlflow_port).public_url
     print("MLflow Tracking UI:", public_url)
     return public_url
-
-
-class MLFlowTracking(Callback):
-    "A `LearnerCallback` that tracks the loss and other metrics into MLFlow"
-
-    def __init__(self, metric_names: List[str], client: MlflowClient, run_id: str):
-        self.client = client
-        self.run_id = run_id
-        self.metric_names = metric_names
-
-    def after_epoch(self):
-        "Compare the last value to the best up to now"
-        for metric_name in self.metric_names:
-            m_idx = list(self.recorder.metric_names[1:]).index(metric_name)
-            if len(self.recorder.values) > 0:
-                val = self.recorder.values[-1][m_idx]
-                self.client.log_metric(
-                    self.run_id, metric_name, float(val), step=self.learn.epoch
-                )
