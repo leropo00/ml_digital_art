@@ -17,6 +17,7 @@ __all__ = [
     "store_fastai_classification_recordings",
     "save_fastai_model_as_artifact",
     "load_fastai_learner_from_run",
+    "load_fastai_train_learner_from_run",
     "MLFlowTracking",
 ]
 
@@ -59,29 +60,52 @@ Save fastai model as mlflow artifact.
 
 
 def save_fastai_model_as_artifact(
-    mlfclient, run_id, learner, exported_model_filename
-) -> str:
-    ### sample exported_model_filename = 'fastai_resnet18_train_only_frozen.pkl'
-
+    mlfclient, run_id, learner, exported_model_basename
+) -> dict[str, str]:
     artifact_path = "fastai_model"
-    learner.export(exported_model_filename)
+    model_train_path = "models"
+
+    # learner prediction export needs to have pickle .pkl extension
+    exported_prediction_filename = exported_model_basename + ".pkl"
+    learner.export(exported_prediction_filename)
     mlfclient.log_artifact(
         run_id,
-        local_path=exported_model_filename,
         artifact_path=artifact_path,
+        local_path=exported_prediction_filename,
     )
-    artifact_uri = f"runs:/{run_id}/{artifact_path}/{exported_model_filename}"
+    artifact_prediction_uri = (
+        f"runs:/{run_id}/{artifact_path}/{exported_prediction_filename}"
+    )
 
-    print("artifact_uri learner saved as pickle file for interference")
-    print(artifact_uri)
+    print("artifact_uri prediction learner saved as pickle file for interference")
+    print(artifact_prediction_uri)
 
-    # clear the exported fastai model
-    os.remove(exported_model_filename)
-    return artifact_uri
+    # learner train export saves/reads automatically to the models/ subdirectory of current directory
+    learner.save(exported_model_basename)  # Saves model weights
+    artifact_path_train = artifact_path + "/" + model_train_path
+    exported_train_filename = model_train_path + "/" + exported_model_basename + ".pth"
+
+    mlfclient.log_artifact(
+        run_id,
+        artifact_path=artifact_path_train,
+        local_path=exported_train_filename,
+    )
+    artifact_train_uri = (
+        f"runs:/{run_id}/{artifact_path_train}/{exported_train_filename}"
+    )
+
+    print("artifact_uri training learner saved as pickle file for interference")
+    print(artifact_train_uri)
+
+    # clear the exported fastai models
+    os.remove(exported_prediction_filename)
+    os.remove(exported_train_filename)
+
+    return {"train": artifact_train_uri, "prediction": artifact_prediction_uri}
 
 
 """
-Load fastai learner from run.
+Load fastai learner for prediction from run.
 """
 
 
@@ -95,6 +119,22 @@ def load_fastai_learner_from_run(
     if dls is not None:
         learner.dls = dls
     return learner
+
+
+"""
+Load fastai learner for train from run.
+"""
+
+
+def load_fastai_train_learner_from_run(
+    mlfclient, run_id: str, model_saved_name: str, learner
+) -> None:
+    pytorch_file = model_saved_name + ".pth"
+    mlfclient.download_artifacts(
+        run_id, "fastai_model/models/" + pytorch_file, "models"
+    )
+
+    learner.load(model_saved_name)
 
 
 class MLFlowTracking(Callback):
