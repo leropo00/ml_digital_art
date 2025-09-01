@@ -7,7 +7,10 @@ This is still a project in the beginning, so many changes will likely happen.
 ## Project setup
 
 Currently, the project has a Docker folder with a container for the project database. Python is not inside the Docker container, so you need a local instance of Python to run the project. I use WSL for development. 
-The project and all its commands are run inside a Python virtual environment. Run the following commands inside your terminal:
+The project and all its commands are run inside a Python virtual environment. 
+I used uv package manager, installation of package manager is described here:
+https://docs.astral.sh/uv/getting-started/installation/
+Run the following commands inside your terminal:
 
 ```
 # move to the project root folder and create a virtual environment
