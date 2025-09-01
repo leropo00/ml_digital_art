@@ -1,8 +1,9 @@
 # Digital Art AI agents and ML training experiments
 
-Projects with AI agents and ML training notebooks,
-for the domain of digital art creation.
-This is still a project in the beginning, so many changes will likely happen.
+Projects with AI agents and ML training notebooks, for the domain of digital art creation. This is still a project in the beginning, so many changes will likely happen.
+
+The project also has front-end to test the functionalities, which can be accessed here:
+https://github.com/leropo00/frontend_digital_art
 
 ## Project setup
 
@@ -76,8 +77,11 @@ Some of the folders are currently empty and the structure of the project may cha
 
 Currently, the following folders are of interest:
 
+Warning: for some reason, GitHub can't render certain notebooks, but this does not mean that these notebooks don't work. You just have to download the notebooks and open them elsewhere.
+
 ```
 ├── docker: container docker image for database 
 ├── notebooks: contains Jupyter Notebooks, which were tested via Google Colab.
 ├── project: contains the implementation of the server-side project
 ```
+
