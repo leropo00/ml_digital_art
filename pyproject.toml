@@ -72,7 +72,8 @@ dependencies = [
 ]
 
 [project.scripts]
-server_dev = "project.app.runner:main"
+server_dev = "project.app.runner:server_dev"
+server_docker = "project.app.runner:server_docker"
 show_examples = "project.test.sample_usages:main"
 
 [tool.setuptools.packages.find]

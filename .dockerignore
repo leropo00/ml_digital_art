@@ -1,0 +1,11 @@
+# folders
+data
+docker
+notebooks
+references
+reports
+
+# files
+.gitignore
+LICENCE
+README.md
