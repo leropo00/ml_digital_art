@@ -1,10 +1,8 @@
-from google.colab import userdata  # type: ignore
-import mlflow  # type: ignore
-from mlflow import MlflowClient  # type: ignore
-import os
 import re
-from pyngrok import ngrok  # type: ignore
-from typing import List
+
+import mlflow
+from google.colab import userdata
+from pyngrok import ngrok
 
 """
 Utils for specific frameworks like fastai,
