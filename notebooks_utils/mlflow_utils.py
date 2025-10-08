@@ -1,7 +1,8 @@
 import re
+from typing import Optional
 
 import mlflow
-from google.colab import userdata
+from google.colab import userdata  # type: ignore
 from pyngrok import ngrok
 
 """
@@ -88,7 +89,7 @@ def start_mlflow_server_in_collab(local_registry, mlflow_port) -> None:
     )  # run tracking UI in the background
 
 
-def ngrok_access_to_mlflow_in_collab(mlflow_port) -> str:
+def ngrok_access_to_mlflow_in_collab(mlflow_port) -> Optional[str]:
     # if you get error that session already runs and you are only limited to 1 session,
     # stop the session here:
     # https://dashboard.ngrok.com/agents

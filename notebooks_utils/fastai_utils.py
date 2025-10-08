@@ -6,9 +6,9 @@ from typing import List
 
 import matplotlib.pyplot as plt
 import numpy as np
-from fastai.callback.core import Callback
-from fastai.interpret import ClassificationInterpretation
-from fastai.learner import load_learner
+from fastai.callback.core import Callback  # type: ignore
+from fastai.interpret import ClassificationInterpretation  # type: ignore
+from fastai.learner import load_learner  # type: ignore
 from mlflow import MlflowClient
 
 __all__ = [
