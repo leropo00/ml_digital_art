@@ -85,7 +85,7 @@ def get_run_id_from_name(
 def start_mlflow_server_in_collab(local_registry, mlflow_port) -> None:
     # get_ipython is part of IPython.core.interactiveshell
     get_ipython().system_raw(  # noqa: F821 # pyright: ignore[reportUndefinedVariable]
-        f"mlflow ui --backend-store-uri {local_registry}  --port {mlflow_port} &"
+        f"mlflow ui --backend-store-uri {local_registry}  --port {mlflow_port}  --allowed-hosts '*' &"
     )  # run tracking UI in the background
 
 
