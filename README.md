@@ -21,12 +21,14 @@ Currently, the following folders are of interest:
   These functions are imported at the start of certain notebooks via Google Drive.
    
 
-Notebooks in Jupyter Notebook folder, currently follow the following structure:
+Jupyter Notebook in folder "notebook", currently follow the following structure:
 
 - study: these are notebooks, that focus on certain concepts and arhitectures
 - tutorials: these are notebooks, that contain tutorial of specific libraries
 
-Other notebooks are stored based on their domain as parent folder and dataset as subfolder name.
-Currently the following domain folders are available:
+Other notebooks are stored based on their domain as parent folder and dataset name as subfolder name.
+If datasets are related to challenges on sites like Kaggle, they will be prefaced with site name.
+Vision folder will contain datasets mostly in art domain. Currently the following domain folders are available:
 
 - vision
+- tabular
